@@ -16,7 +16,7 @@ export const createScheduleController = async (req: Request, res: Response) => {
       propertyId,
     })
 
-    return res.status(201).json({ message: "Schedule created" })
+    return res.status(201).json({ message: "Schedule created!" })
   } catch (error) {
     if (error instanceof AppError) {
       handleError(error, res)

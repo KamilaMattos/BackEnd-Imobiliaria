@@ -5,47 +5,48 @@ import { Propertie } from "../../entities/propertie.entity"
 import { Schedule } from "../../entities/schedule.entity"
 import { User } from "../../entities/user.entity"
 
-export const createScheduleService = async (
-  newSchedule: IScheduleRequest
-): Promise<Schedule> => {
-  const userRepository = AppDataSource.getRepository(User)
-  const porpertyRepository = AppDataSource.getRepository(Propertie)
+export const createScheduleService = async ({
+  date,
+  hour,
+  propertyId,
+  userId,
+}: IScheduleRequest): Promise<void> => {
   const scheduleRepository = AppDataSource.getRepository(Schedule)
+  const propertyRepository = AppDataSource.getRepository(Propertie)
+  const userRepository = AppDataSource.getRepository(User)
 
-  const user = await userRepository.findOneBy({ id: newSchedule.userId })
-  const property = await porpertyRepository.findOneBy({
-    id: newSchedule.propertyId,
-  })
+  const properties = await propertyRepository.findOneBy({ id: propertyId })
 
-  if (!user) {
-    throw new AppError("User not found!", 404)
+  if (!properties || !propertyId) {
+    throw new AppError("Property not found", 404)
   }
 
-  if (!property) {
-    throw new AppError("Property not found!", 404)
-  }
+  const users = await userRepository.findOneBy({ id: userId })
 
-  let { date, hour } = newSchedule
-  const createSchedule = scheduleRepository.create({
-    date,
-    hour,
-    properties: property,
-    users: user,
-  })
-
-  const scheduleAlreadyExists = await scheduleRepository.findOne({
+  const propertySchedule = await scheduleRepository.find({
+    relations: { properties: true },
     where: {
-      hour,
       date,
-      properties: { id: property.id },
-      users: { id: user.id },
+      hour,
     },
   })
 
-  if (scheduleAlreadyExists) {
-    throw new AppError("User schedule already exists!")
+  if (propertySchedule.length > 0) {
+    throw new AppError("User shedule already exists!")
   }
 
-  const scheduleCreated = await scheduleRepository.save(createSchedule)
-  return scheduleCreated
+  if (+hour.split(":")[0] < 8 || +hour.split(":")[0] >= 18) {
+    throw new AppError("Invalid hour")
+  }
+
+  if (new Date(date).getDay() == 0 || new Date(date).getDay() == 6) {
+    throw new AppError("Invalid date!")
+  }
+
+  await scheduleRepository.save({
+    date: date,
+    hour: hour,
+    users: users!,
+    properties: properties,
+  })
 }
