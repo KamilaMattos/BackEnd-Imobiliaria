@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm"
 import { Propertie } from "./propertie.entity"
 
 @Entity("categories")
-export class Categories {
+export class Categorie {
   @PrimaryGeneratedColumn("uuid")
   id: string
 

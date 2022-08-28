@@ -10,7 +10,7 @@ import {
   JoinColumn,
 } from "typeorm"
 import { Address } from "./address.entity"
-import { Categories } from "./categorie.entity"
+import { Categorie } from "./categorie.entity"
 import { Schedule } from "./schedule.entity"
 
 @Entity("properties")
@@ -36,8 +36,8 @@ export class Propertie {
   @OneToMany(() => Schedule, (schedules) => schedules.properties)
   schedules: Schedule[]
 
-  @ManyToOne(() => Categories, { eager: true })
-  category: Categories
+  @ManyToOne(() => Categorie, { eager: true })
+  category: Categorie
 
   @OneToOne(() => Address, { eager: true })
   @JoinColumn()
