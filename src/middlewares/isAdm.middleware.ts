@@ -8,7 +8,7 @@ export const isAdm = async (
   next: NextFunction
 ) => {
   try {
-    const { isAdm } = req.body
+    const { isAdm } = req.user
 
     if (!isAdm) {
       throw new AppError("Unauthorized", 403)

@@ -15,14 +15,14 @@ export const authToken = async (
       throw new AppError("Invalid token!", 401)
     }
 
-    token = token.split(" ")[1]
+    //token = token.split(" ")[1]
 
     jwt.verify(
       token,
       process.env.SECRET_KEY as string,
       (error: any, decoded: any) => {
         if (error) {
-          throw new AppError("Invalid token!", 401)
+          throw new AppError("Invalid token", 401)
         }
 
         req.user = {
