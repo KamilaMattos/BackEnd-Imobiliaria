@@ -4,33 +4,21 @@ import { IUserRequest } from "../../interfaces/users"
 import { AppError } from "../../errors/appError"
 import { hash } from "bcryptjs"
 
-export const createUserService = async ({
-  email,
-  name,
-  password,
-  isAdm,
-}: IUserRequest) => {
+export const createUserService = async (
+  newUser: IUserRequest
+): Promise<User> => {
+  newUser.password = await hash(newUser.password, 10)
   const userRepository = AppDataSource.getRepository(User)
-
-  const userAlreadyExists = await userRepository.findOneBy({ email })
+  const userAlreadyExists = await userRepository.findOneBy({
+    email: newUser.email,
+  })
 
   if (userAlreadyExists) {
     throw new AppError("User already exists", 400)
   }
 
-  const hashedPassword = await hash(password, 10)
+  const createUser = userRepository.create(newUser)
+  const savedUser = await userRepository.save(createUser)
 
-  const newUser = userRepository.create({
-    email,
-    name,
-    password: hashedPassword,
-    isAdm,
-    isActive: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  })
-
-  await userRepository.save(newUser)
-
-  return newUser
+  return savedUser
 }

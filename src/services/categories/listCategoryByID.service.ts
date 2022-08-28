@@ -1,13 +1,13 @@
 import AppDataSource from "../../data-source"
-import { Categorie } from "../../entities/categorie.entity"
+import { Category } from "../../entities/category.entity"
 import { AppError } from "../../errors/appError"
 
 export const listCategoryByIDService = async (
   id: string
-): Promise<Categorie> => {
-  const categoriesRepository = AppDataSource.getRepository(Categorie)
+): Promise<Category> => {
+  const categoriesRepository = AppDataSource.getRepository(Category)
 
-  const categories = await categoriesRepository.findOne({
+  const category = await categoriesRepository.findOne({
     where: {
       id,
     },
@@ -16,9 +16,9 @@ export const listCategoryByIDService = async (
     },
   })
 
-  if (!categories) {
+  if (!category) {
     throw new AppError("Category not found", 404)
   }
 
-  return categories
+  return category
 }

@@ -13,23 +13,28 @@ export const loginService = async ({
 
   const user = await userRepository.findOneBy({ email })
 
+  if (user?.isActive == false) {
+    throw new AppError("User is not active")
+  }
+
   if (!user) {
-    throw new AppError("Invalid email or password", 403)
+    throw new AppError("Invalid email or password", 401)
   }
 
   if (!user.isActive) {
-    throw new AppError("User is not active", 400)
+    throw new AppError("Invalid user", 401)
   }
 
   const checkPassword = await compare(password, user.password)
 
   if (!checkPassword) {
-    throw new AppError("Invalid email or password", 403)
+    throw new AppError("Invalid credentials!", 403)
   }
 
   const token = jwt.sign(
     {
       isAdm: user.isAdm,
+      isActive: user.isActive,
     },
     process.env.SECRET_KEY as string,
     {

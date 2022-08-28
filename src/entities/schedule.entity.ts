@@ -1,9 +1,9 @@
 import { Column, PrimaryGeneratedColumn, Entity, ManyToOne } from "typeorm"
-import { Propertie } from "./propertie.entity"
+import { Property } from "./property.entity"
 import { User } from "./user.entity"
 
 @Entity("schedules_user_propertie")
-export class Schedule {
+class Schedule {
   @PrimaryGeneratedColumn("uuid")
   id: string
 
@@ -13,9 +13,11 @@ export class Schedule {
   @Column({ type: "time" })
   hour: string
 
-  @ManyToOne(() => User, { eager: true })
-  users: User
+  @ManyToOne(() => User, (user) => user.schedules, { eager: true })
+  user: User
 
-  @ManyToOne(() => Propertie)
-  properties: Propertie
+  @ManyToOne(() => Property, (property) => property.schedules)
+  property: Property
 }
+
+export { Schedule }

@@ -1,22 +1,24 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
 
 @Entity("addresses")
-export class Address {
+class Address {
   @PrimaryGeneratedColumn("uuid")
   id: string
 
-  @Column()
+  @Column({ length: 120 })
   district: string
 
-  @Column()
+  @Column({ length: 8 })
   zipCode: string
 
-  @Column()
+  @Column({ length: 6, nullable: true })
   number: string
 
-  @Column()
+  @Column({ length: 60 })
   city: string
 
-  @Column()
+  @Column({ length: 2 })
   state: string
 }
+
+export { Address }

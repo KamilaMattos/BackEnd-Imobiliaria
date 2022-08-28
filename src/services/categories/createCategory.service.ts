@@ -1,23 +1,22 @@
 import AppDataSource from "../../data-source"
-import { Categorie } from "../../entities/categorie.entity"
 import { AppError } from "../../errors/appError"
 import { ICategoryRequest } from "../../interfaces/categories"
+import { Category } from "../../entities/category.entity"
 
-export const createCategorieService = async ({
-  name,
-}: ICategoryRequest): Promise<ICategoryRequest> => {
-  const categoryRepository = AppDataSource.getRepository(Categorie)
+export const createCategorieService = async (
+  category: ICategoryRequest
+): Promise<Category> => {
+  const categoryRepository = AppDataSource.getRepository(Category)
 
-  const categoryAlreadyExists = await categoryRepository.findOneBy({ name })
+  const categoryAlreadyExists = await categoryRepository.findOneBy({
+    name: category.name,
+  })
 
   if (categoryAlreadyExists) {
-    throw new AppError("Category already exists!", 400)
+    throw new AppError("Category already exists!")
   }
 
-  const createdCategory = {
-    name,
-  }
+  const createdCategory = categoryRepository.save(category)
 
-  await categoryRepository.save(createdCategory)
   return createdCategory
 }

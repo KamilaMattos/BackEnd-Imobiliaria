@@ -10,32 +10,34 @@ import { Exclude } from "class-transformer"
 import { Schedule } from "./schedule.entity"
 
 @Entity("users")
-export class User {
+class User {
   @PrimaryGeneratedColumn("uuid")
   id: string
 
-  @Column()
+  @Column({ length: 90 })
   name: string
 
-  @Column({ unique: true })
+  @Column({ unique: true, length: 70 })
   email: string
 
-  @Column({ default: true })
-  isAdm: boolean
-
-  @Column()
-  isActive: boolean
-
-  @Column()
+  @Column({ length: 160 })
   @Exclude()
   password: string
 
-  @CreateDateColumn({ type: "date" })
+  @Column()
+  isAdm: boolean
+
+  @Column({ default: true })
+  isActive: boolean
+
+  @CreateDateColumn()
   createdAt: Date
 
-  @UpdateDateColumn({ type: "date" })
+  @UpdateDateColumn()
   updatedAt: Date
 
-  @OneToMany(() => Schedule, (schedules) => schedules.users)
+  @OneToMany(() => Schedule, (schedules) => schedules.user)
   schedules: Schedule[]
 }
+
+export { User }

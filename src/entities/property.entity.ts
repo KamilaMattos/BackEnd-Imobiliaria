@@ -10,11 +10,11 @@ import {
   JoinColumn,
 } from "typeorm"
 import { Address } from "./address.entity"
-import { Categorie } from "./categorie.entity"
+import { Category } from "./category.entity"
 import { Schedule } from "./schedule.entity"
 
 @Entity("properties")
-export class Propertie {
+class Property {
   @PrimaryGeneratedColumn("uuid")
   id: string
 
@@ -27,19 +27,21 @@ export class Propertie {
   @Column({ type: "integer" })
   size: number
 
-  @CreateDateColumn({ type: "date" })
+  @CreateDateColumn()
   createdAt: Date
 
-  @UpdateDateColumn({ type: "date" })
+  @UpdateDateColumn()
   updatedAt: Date
-
-  @OneToMany(() => Schedule, (schedules) => schedules.properties)
-  schedules: Schedule[]
-
-  @ManyToOne(() => Categorie, { eager: true })
-  category: Categorie
 
   @OneToOne(() => Address, { eager: true })
   @JoinColumn()
   address: Address
+
+  @ManyToOne(() => Category)
+  category: Category
+
+  @OneToMany(() => Schedule, (schedule) => schedule.property)
+  schedules: Schedule[]
 }
+
+export { Property }
