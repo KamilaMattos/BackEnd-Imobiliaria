@@ -89,7 +89,7 @@ yarn test --all
 #
 
 ### Rodar os testes de uma pasta específica
-`detalhe: repare que tests está envolvido por 2 underlines. Isso se chama dunder.`
+`detalhe: repare que tests está envolvido por 2 underlines.`
 ````
 yarn test ./scr/__tests__/integration/<subpasta>
 ````
